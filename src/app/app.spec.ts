@@ -1,23 +1,35 @@
 import { TestBed } from '@angular/core/testing';
-import { App } from './app';
 
-describe('App', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [App],
-    }).compileComponents();
+import { Random } from './random';
+
+describe('Random', () => {
+  let service: Random;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(Random);
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
+  describe('randomNumber', () => {
+    it('should return between 1-100', () => {
+      const max = 100;
+      for (let i = 0; i < 10; i++) {
+        const drawn = service.randomNumber(max);
+        expect(drawn).toBeLessThanOrEqual(max);
+        expect(drawn).toBeGreaterThanOrEqual(1);
+        expect(Math.round(drawn))
+          .withContext('Must be integer')
+          .toEqual(drawn);
+      }
+    });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, lab-j');
+    it('should return values [1,2,3] only', () => {
+      const max = 3;
+      const possibleValues = [1, 2, 3];
+      for (let i = 0; i < 10; i++) {
+        const drawn = service.randomNumber(max);
+        expect(possibleValues).toContain(drawn);
+      }
+    });
   });
 });
